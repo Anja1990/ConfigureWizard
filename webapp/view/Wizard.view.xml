@@ -1,6 +1,6 @@
 <mvc:View
 		height="100%"
-		controllerName="QuickStartApplication.controller.View1"
+		controllerName="ConfigureWizard.controller.Wizard"
 		xmlns:layout="sap.ui.layout"
 		xmlns:form="sap.ui.layout.form"
 		xmlns:core="sap.ui.core"
@@ -13,9 +13,9 @@
 				id="wizardContentPage"
 				showHeader="false">
 					<content>
-						<Wizard id="CreateProductWizard"
+				<Wizard id="CreateProductWizard"
 								complete="wizardCompletedHandler">
-								<WizardStep id="ViewChoosing"
+					<!--					<WizardStep id="ViewChoosing"
 										title="Roler"
 										validated="true">
 								<HBox
@@ -30,7 +30,7 @@
 									
 									</SegmentedButton>
 								</HBox>
-							</WizardStep>
+							</WizardStep> 
 							<WizardStep id="ProductTypeStep"
 										title="Product Type"
 										validated="true">
@@ -51,38 +51,39 @@
 										<Button icon="sap-icon://database" text="Other"/>
 									</SegmentedButton>
 								</HBox>
-							</WizardStep>
+							</WizardStep>-->
 							<WizardStep id="ProductInfoStep"
 										validated="false"
-										title="Product Information"
+										title="Define Application Object Type"
 										activate="additionalInfoValidation">
-								<MessageStrip class="sapUiSmallMarginBottom"
-											  text="Validation in the wizard is controlled by calling the validateStep(Step) and invalidateStep(Step) methods "
-											  showIcon="true"/>
-								<Text text="Cras tellus leo, volutpat vitae ullamcorper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien et viverra imperdiet, orci erat porttitor nulla, eget commodo metus nibh nec ipsum. Aliquam lacinia euismod metus, sollicitudin pellentesque purus volutpat eget. Pellentesque egestas erat quis eros convallis mattis. Mauris hendrerit sapien a malesu corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien  corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien  "/>
+
+								<Text text="The application object type represents a business application, for example: Billing, Delivery, Open Item List etc."/>
 								<form:SimpleForm
 										editable="true">
-									<Label text="Name" required="true"/>
-									<Input valueStateText="Enter 6 symbols or more"
-										   valueState="{/productNameState}" id="ProductName" liveChange="additionalInfoValidation"
-										   placeholder="Enter name with length greater than 6" value="{/productName}"/>
+									<Label text=" Name of Application Object Type" required="true"/>
+									<Input valueStateText="Enter your Application Object Type"
+										   valueState="{/AppObjTypeStatus}" id="AppObjType" liveChange="additionalInfoValidation"
+										   placeholder="Can only contain A-Z,'_',0-9" value="{/AppObjType}"/>
+									<Label text="Keeping Legacy Output Control Framework?"/>
+									<CheckBox selected="{/isLegacyOutput}" select="OnCheckLegacy"/>
+									<Label text="Legacy Output Control Framework"  id="LegacyTextBox"/>
+									<Select selectedKey="{/LegacyFramework}" id="LegacySelectBox" selectedItem="NAST">
+										<core:Item key="NAST" text="NAST framwork"/>
+										<core:Item key="NOOC" text="other framworks"/>
+									</Select>
 									<Label text="Weight" required="true"/>
 									<Input valueStateText="Enter digits"
 										   valueState="{/productWeightState}" id="ProductWeight"
 										   liveChange="additionalInfoValidation" type="Number" placeholder="Enter digits"
 										   value="{/productWeight}"/>
-									<Label text="Manufacturer"/>
-									<Select selectedKey="{/productManufacturer}">
-										<core:Item key="Apple" text="Apple"/>
-										<core:Item key="Microsoft" text="Microsoft"/>
-										<core:Item key="Google" text="Google"/>
-										<core:Item key="Sony" text="Sony"/>
-										<core:Item key="Samsung" text="Samsung"/>
-										<core:Item key="Logitech" text="Logitech"/>
-									</Select>
+								
 									<Label text="Description"/>
 									<TextArea value="{/productDescription}" rows="8"/>
-								</form:SimpleForm>
+								</form:SimpleForm>							
+								<MessageStrip id="WarningLegacy"
+											class="sapUiSmallMarginBottom"
+											  text="Validation in the wizard is controlled by calling the validateStep(Step) and invalidateStep(Step) methods "
+											  showIcon="true"	/>
 							</WizardStep>
 							<WizardStep id="OptionalInfoStep"
 										validated="true"

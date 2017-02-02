@@ -3,8 +3,10 @@ sap.ui.define([
 ], function(Controller) {
 	"use strict";
 
-	return Controller.extend("QuickStartApplication2.controller.View1", {
-
+	return Controller.extend("ConfigureWizard.controller.Welcome", {
+		onWizard: function(){
+				this.getOwnerComponent().getRouter().navTo("wizard");
+		}
 	});
 
 });

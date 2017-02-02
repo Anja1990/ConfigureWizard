@@ -1,6 +1,29 @@
 {
   "run": [
     {
+      "filePath": "/webapp/Component.js",
+      "previewMode": 1,
+      "dataMode": 1,
+      "workspace": "withWorkspace",
+      "ui5ActiveVersion": "",
+      "ui5VerSource": null,
+      "isDefaultVersion": 0,
+      "urlParameters": [
+        {
+          "paramName": "",
+          "paramValue": ""
+        }
+      ],
+      "hashParameter": "",
+      "backendSystem": [],
+      "_metadata": {
+        "id": 8962094,
+        "runnerId": "fiorirunner",
+        "displayName": "Run Component.js",
+        "lastRunTimeStamp": 1486040827710
+      }
+    },
+    {
       "filePath": "/webapp/index.html",
       "previewMode": 0,
       "dataMode": 1,
@@ -20,7 +43,32 @@
         "id": 9335140,
         "runnerId": "webapprunner",
         "displayName": "Run index.html",
-        "lastRunTimeStamp": 1485875838131
+        "lastRunTimeStamp": 1486030683508
+      }
+    },
+    {
+      "flpAppName": "test",
+      "flpDestName": "ER9CLNT001",
+      "hcpAccount": "fiori",
+      "flpName": "",
+      "hcpProvider": "",
+      "emdType": "ABAP",
+      "filePath": "/ConfigureWizard",
+      "workspaceApplications": [],
+      "oUrlParameters": [],
+      "urlParametersNotNeeded": false,
+      "oHashParameter": "",
+      "urlParameters": [
+        {
+          "paramName": "",
+          "paramValue": ""
+        }
+      ],
+      "_metadata": {
+        "id": 3467325,
+        "runnerId": "embeddedrunner",
+        "displayName": "Run ConfigureWizard",
+        "lastRunTimeStamp": 1485950690534
       }
     }
   ]

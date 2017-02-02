@@ -1,19 +1,18 @@
-<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="QuickStartApplication2.controller.View1">
-	<App>
-		<pages>
-			<Page title="Your Quick Start application is ready!">
-				<content>
-					<HBox width="100%" id="__hbox0">
+<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ConfigureWizard.controller.Welcome">
+			<Page title="Choosing your mode!">
+				<content>	
+				 
+ 	 
+				 
+						<HBox alignItems="Center" justifyContent="Center" width="100%">
 					    <items>
-					        <SegmentedButton selectedButton="__button1" id="__button0">
+					        <SegmentedButton selectedButton="__button1" id="__button0" 	width="320px">
 					            <buttons>
-					                <Button text="Button 1" id="__button1"/>
-					                <Button text="Button 2" id="__button2"/></buttons>
+					                <Button text="Wizard Mode" id="__button1" press="onWizard"/>
+					                <Button text="Expert  Mode" id="__button2"/></buttons>
 					        </SegmentedButton>
 					    </items>
 					</HBox>
 				</content>
 			</Page>
-		</pages>
-	</App>
 </mvc:View>
