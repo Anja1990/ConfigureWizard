@@ -21,7 +21,7 @@ sap.ui.define([
 				routes: [
 					{
 						name: "welcome",
-						// empty hash - normally the start page
+						// empty hash - normally the start pagehjhj
 						pattern: "",
 						target: "welcome"
 					},
