@@ -1,0 +1,24 @@
+{
+    "AppObjectTypeList": [
+        {
+            "AppObjType": "BILLING_DOCUMENT",
+            "isLegacyOutput": 1,
+            "LegacyFramework": "",
+            "ActivationLevel": "",
+            "Description": "this is a demo",
+            "CusAct": "Application Active",
+            "CusDefAct": "Application Active"
+        }
+		],
+	"processing_App":{
+            "AppObjType": "",
+            "AppObjTypeStatus":"Error",
+            "isLegacyOutput": true,
+            "LegacyFramework": "",
+            "ActivationCode":"Application Active",
+            "ActivationLevel": true,
+            "Description": "this is a demo",
+            "CusAct": "Application Active",
+            "CusDefAct": "Application Active"
+        }	
+}

@@ -15,6 +15,7 @@
 					<content>
 				<Wizard id="CreateProductWizard"
 								complete="wizardCompletedHandler">
+							 
 					<!--					<WizardStep id="ViewChoosing"
 										title="Roler"
 										validated="true">
@@ -52,41 +53,88 @@
 									</SegmentedButton>
 								</HBox>
 							</WizardStep>-->
-							<WizardStep id="ProductInfoStep"
-										validated="false"
-										title="Define Application Object Type"
-										activate="additionalInfoValidation">
+						<WizardStep id="CreateAppObj"
+									validated="true"
+									title="Define Application Object Type"
+									activate="OnAppobjTypeValid">
 
-								<Text text="The application object type represents a business application, for example: Billing, Delivery, Open Item List etc."/>
-								<form:SimpleForm
-										editable="true">
-									<Label text=" Name of Application Object Type" required="true"/>
-									<Input valueStateText="Enter your Application Object Type"
-										   valueState="{/AppObjTypeStatus}" id="AppObjType" liveChange="additionalInfoValidation"
-										   placeholder="Can only contain A-Z,'_',0-9" value="{/AppObjType}"/>
-									<Label text="Keeping Legacy Output Control Framework?"/>
-									<CheckBox selected="{/isLegacyOutput}" select="OnCheckLegacy"/>
-									<Label text="Legacy Output Control Framework"  id="LegacyTextBox"/>
-									<Select selectedKey="{/LegacyFramework}" id="LegacySelectBox" selectedItem="NAST">
+							<Text text="The application object type represents a business application, for example: Billing, Delivery, Open Item List etc."/>
+							<form:SimpleForm
+									editable="true" 	layout="ResponsiveGridLayout">
+								<Label text=" Name of Application Object Type" required="true"/>
+								<Input valueStateText="Enter your Application Object Type"
+									   valueState="{/processing_App/AppObjTypeStatus}" id="AppObjType" liveChange="OnAppobjTypeValid"
+									   placeholder="Can only contain a-z,A-Z,'_',0-9" value="{/processing_App/AppObjType}"/>
+								<!--	<Label text="Keeping Legacy Output Control Framework?"/>-->
+								<Label text="Legacy Output Control Framework"  id="LegacyTextBox" />
+									<CheckBox selected="{/isLegacyOutput}" select="OnCheckLegacy" width="2mm"/>		
+									<Select selectedKey="{/LegacyFramework}" id="LegacySelectBox"    width="200%">
+										<core:Item key="" text="No legacy framwork" id= "apoc_frame"/>
 										<core:Item key="NAST" text="NAST framwork"/>
 										<core:Item key="NOOC" text="other framworks"/>
 									</Select>
-									<Label text="Weight" required="true"/>
-									<Input valueStateText="Enter digits"
-										   valueState="{/productWeightState}" id="ProductWeight"
-										   liveChange="additionalInfoValidation" type="Number" placeholder="Enter digits"
-										   value="{/productWeight}"/>
+								<Label />   	
+									<MessageStrip id="WarningLegacy"
+											 class="sapUiSmallMarginBottom"
+											 text="You are choosing a legacy OM framework. If can influence.....\n">
+											 <link>
+												<Link text="See more detail"
+													target="_blank"
+													href="https://wiki.wdf.sap.corp/wiki/display/SimplSuite/Output+Control+-+Adoption#OutputControl-Adoption-migration" />
+											</link> 
+								</MessageStrip>
+								<Label /> 
+									<MessageStrip
+										id="ErrorLegacy"
+										text="Lagacy Framwork is not supported by cloud!"
+										type="Error"
+										showIcon="true"
+										showCloseButton="true"
+										class="sapUiMediumMarginBottom"/>
+								<Label text="Activation Mode" required="false" id="ActivationTextBox" />
+									<CheckBox selected="{/processing_App/ActivationLevel}" select="OnChecActivationLevel"  id="ActivationLevelCheck" text="Always Active">
+									</CheckBox>
+								 <!--	<Select selectedKey="{/Activation}" id="ActivationSelectBox" selectedItem="Active" >
+										<core:Item key="Active" text="Application Active"/>
+										<core:Item key="Inactive" text="Application Inactive"/>
+									</Select>  -->
+									<SegmentedButton  select="setAppActivation" selectedKey="{/processing_App/ActivationCode}" id="ActivationSelectBox" >
+										<items>
+											<SegmentedButtonItem   text="Application Active" key="Application Active" />
+											<SegmentedButtonItem   text="Application Inactive" key="Application Inactive" />
+										</items>
+									</SegmentedButton>
 								
-									<Label text="Description"/>
-									<TextArea value="{/productDescription}" rows="8"/>
-								</form:SimpleForm>							
-								<MessageStrip id="WarningLegacy"
-											class="sapUiSmallMarginBottom"
-											  text="Validation in the wizard is controlled by calling the validateStep(Step) and invalidateStep(Step) methods "
-											  showIcon="true"	/>
-							</WizardStep>
+								<Label text="Description"/>
+								<TextArea value="{/processing_App/AppDescription}" rows="1"  placeholder="Input some description of your application type."/>
+							</form:SimpleForm>	
+							
+					 		<form:SimpleForm title="Customer Setting" 	layout="ResponsiveGridLayout" id="CusActive">
+					 		<Label />	<MessageStrip
+										id="WarnCus"
+										text="The entries on APOC_C_OBJ_ACT_V need to be created and transported in the application layer !\n Get in touch with your local SET contact for shipping of this customizing content."
+										type="Warning"
+										showIcon="true"
+										showCloseButton="true"
+										class="sapUiMediumMarginBottom"/>
+					 		<Label text="Active Switch"/>	
+							 
+								<Select selectedKey="{/processing_App/CusAct}" id="CusActSelectBox"    name="Active Switch">
+										<core:Item key="ACT" text="Active" />
+										<core:Item key="INACT" text="Inactive"/>
+								</Select>
+							<Label text="Default Mode"/>	
+								<Select selectedKey="{/processing_App/CusDefAct}" id="CusDefActSelectBox"    name="Default Mode">
+										<core:Item key="ACT" text="Active" />
+										<core:Item key="INACT" text="Inactive"/>
+								</Select>	
+					 			
+					 		</form:SimpleForm>
+						</WizardStep>
+							
+ 
 							<WizardStep id="OptionalInfoStep"
-										validated="true"
+										validated="false"
 										activate="optionalStepActivation"
 										title="Optional Information">
 								<MessageStrip class="sapUiSmallMarginBottom"
@@ -122,7 +170,33 @@
 									</ComboBox>
  
 								</form:SimpleForm>
+								
+								
+								 <Table id="productList" updateFinished="onListUpdateFinished" updateStarted="onListUpdateStarted" items="{/Products}">
+									  <columns>
+									  <Column>
+									  <Text text="{i18n>Name}"/>
+									  </Column>
+									  <Column>
+									  <Text text="{i18n>Description}"/>
+									  </Column>
+									  <Column>
+									  <Text text="{i18n>Price}"/>
+									  </Column>
+									  </columns>
+									  <items>
+									  <ColumnListItem class="navTableItemLayout" id="masterListItem" press="onItemSelect" vAlign="Middle">
+									  <cells>
+									  <Text text="{Name}" width="20%"/>
+									  <Text text="{Description}" width="60%"/>
+									  <Text text="{path: 'Price', formatter: '.formatter.currencyValue'}" width="20%"/>
+									  </cells>
+									  </ColumnListItem>
+									  </items>
+								</Table>
 							</WizardStep>
+	
+			
 							<WizardStep id="PricingStep"
 										activate="pricingActivate"
 										complete="pricingComplete"

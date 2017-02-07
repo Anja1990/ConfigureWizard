@@ -13,35 +13,60 @@ sap.ui.define([
 			this._oNavContainer = this.getView().byId("wizardNavContainer");
 			this._oWizardContentPage = this.getView().byId("wizardContentPage");
 			//this._oWizardReviewPage = sap.ui.xmlfragment("QuickStartApplication.view.ReviewPage", this);
-			this.getView().byId("WarningLegacy").setVisible(false);
+		//	this.getView().byId("WarningLegacy").setVisible(false);
 			//this._oNavContainer.addPage(this._oWizardReviewPage);
 			this.model = new sap.ui.model.json.JSONModel();
 		//	this.model.setData({
 		//		productNameState:"Error",
 		//		productWeightState:"Error"
 		//	});
+			this.model.loadData("model/data.json");
 			this.getView().setModel(this.model);
 			this.model.setProperty("/productType", "Mobile");
 			this.model.setProperty("/navApiEnabled", true);
 			this.model.setProperty("/productVAT", false);
 			this._setEmptyValue("/productManufacturer");
-			this._setEmptyValue("/productDescription");
+			this.model.setProperty("/AppDescription", "");
 			this._setEmptyValue("/productPrice");		
 			this.OnCheckLegacy();
+			this.OnChecActivationLevel();
 		},
+		OnChecActivationLevel: function() {
+				var isactive=this.model.getProperty("/processing_App/ActivationLevel");
+				if (isactive){
+					 this.model.setProperty("{/processing_App/Activation}","Active");
+					 this.model.setProperty("/processing_App/ActivationCode", "Application Active");
+					 this.model.setProperty("{/processing_App/CusAct}","Active");
+					 this.model.setProperty("{/processing_App/CusDefAct}","Active");
+					 this.model.setProperty("{/processing_App/Activation}","Active");
+					} 
+					else
+					{
+						isactive=false;
+					}
+				this.getView().byId("CusDefActSelectBox").setEnabled(!isactive);
+				this.getView().byId("CusActSelectBox").setEnabled(!isactive);
+				this.getView().byId("WarnCus").setVisible(!isactive);
+				this.getView().byId("ActivationSelectBox").setEnabled(!isactive);
+			},
 		OnCheckLegacy: function() {
-			var islegacy=this.model.getProperty("/isLegacyOutput");
+			var islegacy=this.model.getProperty("/processing_App/isLegacyOutput");
 			if (islegacy){
-				 var legacyframework=this.getView().byId("LegacySelectBox").getSelectedItem().getKey();
-				 this.model.setProperty("LegacyFramework",legacyframework);
+				 //var legacyframework=this.getView().byId("LegacySelectBox").getSelectedItem().getKey();
+				
+				 this.model.setProperty("/processing_App/LegacyFramework","NAST"); 
 				}
 			else
 				{
-					this.model.setProperty("LegacyFramework","");
+					this.model.setProperty("/processing_App/LegacyFramework","");
 					islegacy= false;
+					this.model.setProperty("/processing_App/ActivationLevel",true);
 				}
+				this.getView().byId("ActivationLevelCheck").setEnabled(islegacy);
+				this.getView().byId("apoc_frame").setEnabled(!islegacy);
 				this.getView().byId("LegacySelectBox").setEnabled(islegacy);
 				this.getView().byId("WarningLegacy").setVisible(islegacy);
+				this.getView().byId("ErrorLegacy").setVisible(islegacy);
 			},
 		isNumberOr_Letter: function( s ) {
 		    var regu = "^[0-9a-zA-Z\_]+$";
@@ -59,15 +84,25 @@ sap.ui.define([
 			this.getView().byId("ProductStepChosenType").setText("Chosen product type: " + productType);
 			this._wizard.validateStep(this.getView().byId("ProductTypeStep"));
 		},
-		setProductTypeFromSegmented: function (evt) {
-			var productType = evt.mParameters.button.getText();
-			this.model.setProperty("/productType", productType);
-			this._wizard.validateStep(this.getView().byId("ProductTypeStep"));
+		setAppActivation: function (evt) {
+			var Activation = evt.mParameters.button.getText();
+			this.model.setProperty("/ActivationCode", Activation);
+			//this._wizard.validateStep(this.getView().byId("ProductTypeStep"));
 		},
-		additionalInfoValidation : function () {
+		OnAppobjTypeComplete : function () {
+			var  activemode = this.model.getProperty("/processing_App/ActivationLevel");
+				//this._wizard.invalidateStep(this.getView().byId("ManageApplicationObject"));
+				//this._wizard.invalidateStep(this.getView().byId("ProductInfoStep"));
+				if(!activemode){
+					this.getView().byId("CreateAppObj").setNextStep(this.getView().byId("ManageApplicationObject"));
+				}else
+				{
+					this.getView().byId("CreateAppObj").setNextStep(this.getView().byId("OptionalInfoStep"));
+				}
+		},
+		OnAppobjTypeValid : function () {
 			var appObjTyor = this.getView().byId("AppObjType").getValue();
-			var weight = parseInt(this.getView().byId("ProductWeight").getValue());
-			
+ 			
 			appObjTyor = appObjTyor.replace(/^\s+|\s+$/g,"");
         	this.getView().byId("AppObjType").setValue(appObjTyor);
 			
@@ -75,13 +110,17 @@ sap.ui.define([
 			var  AppName = this.isNumberOr_Letter(appObjTyor);
 		//	isNaN(weight) ? this.model.setProperty("/productWeightState", "Error") : this.model.setProperty("/productWeightState", "None");
 		//	name.length<6 ?  this.model.setProperty("/productNameState", "Error") : this.model.setProperty("/productNameState", "None");
-
 			if (!AppName){
-				this._wizard.invalidateStep(this.getView().byId("ProductInfoStep"));
-				this.model.setProperty("/AppObjTypeStatus", "Error") ;}
+					this._wizard.invalidateStep(this.getView().byId("CreateAppObj"));
+					this.model.setProperty("/processing_App/AppObjTypeStatus", "Error") ;
+					}
 			else{
-				this._wizard.validateStep(this.getView().byId("ProductInfoStep"));
-				this.model.setProperty("/AppObjTypeStatus", "None") ;}
+					this.getView().byId("CreateAppObj").setNextStep(this.getView().byId("ManageApplicationObject"));
+				this._wizard.validateStep(this.getView().byId("CreateAppObj"));
+				this.model.setProperty("/processing_App/AppObjType", appObjTyor) ;
+				this.model.setProperty("/processing_App/AppObjTypeStatus", "None") ;
+
+			}
 		},
 		optionalStepActivation: function () {
 			MessageToast.show(
